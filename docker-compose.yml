@@ -1,0 +1,12 @@
+version: '3.4'
+services:
+  rstudio:
+    image: rocker/tidyverse
+    container_name: rstudio
+    hostname: rstudio
+    ports:
+      - "8787:8787"
+    environment:
+      - PASSWORD=yourpassword
+    volumes:
+      - ./data:/home/rstudio
