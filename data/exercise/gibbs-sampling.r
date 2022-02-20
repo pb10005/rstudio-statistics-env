@@ -21,7 +21,7 @@ mu0 <- 5
 m0 <- 1/4
 
 m1 <- m0+n
-n1 <- n0+n
+n1 <- n0+n　
 mu1 <- (n*mean1+m0*mu0)/(m0+n)
 Q <- sum((heikin-mean1)^2)
 n1S1 <- n0S0+Q+m0*n/(m0+n)*(mean1-mu0)^2
