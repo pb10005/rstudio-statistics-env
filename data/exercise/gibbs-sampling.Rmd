@@ -2,7 +2,9 @@
 title: "正規分布のパラメータをギブスサンプリングで推定する"
 author: "pb10005"
 date: "2022/2/20"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 bibliography: references.bib
 ---
 
@@ -92,6 +94,12 @@ p(\mu|\boldsymbol{y}) &\propto& p(\mu)p(\boldsymbol{y}|\mu) \\
 ※3行目の変形で$\sum_{i=1}^N(y_i - \mu)^2 = n\mu^2 - 2\mu\sum_{i=1}^N{y_i} + const.$を用いた。  
 ※4行目の変形で$a(x-b)^2+c(x-d)^2 = (a+c)\left(x - \frac{ab+cd}{a+c}\right)^2+const.$を用いた。
 
+式をきれいにするために$w = \frac{\frac{n}{\sigma^2}}{\frac{1}{\sigma_0^2} + \frac{n}{\sigma^2}}$とおくと、$\mu$の事後分布は以下のようになる。
+
+$$
+p(\mu|\boldsymbol{y}, \sigma^2) \sim N\left(w\bar{y} + (1-w)\mu_0, \frac{w\sigma^2}{n}\right)
+$$
+
 ### 2.3 $\sigma^2$のサンプリング
 $\mu$を所与としたときの$\sigma^2$の事後分布のカーネルを求める。$\tau = \frac{1}{\sigma^2}$と変換すると、ガンマ分布$Ga(a, b)$が共役事前分布となることが知られている。
 
@@ -102,7 +110,10 @@ p(\tau|\boldsymbol{y}) &\propto& p(\tau)p(\boldsymbol{y}|\tau) \\
 
 \end{eqnarray}
 
-より、$\tau$の事後分布はガンマ分布$Ga\left(a+\frac{1}{2},\frac{1}{\frac{1}{b} + \frac{1}{2}\sum_{i=1}^{N}(y_i - \mu)^2}\right)$に従うことがわかる。
+より、$\tau$の条件付事後分布は以下のように表すことができる。
+$$
+p(\tau|\boldsymbol{y}, \mu) \sim Ga\left(a+\frac{N}{2},\frac{1}{\frac{1}{b} + \frac{1}{2}\sum_{i=1}^{N}(y_i - \mu)^2}\right)
+$$
 
 ### 2.4 Rによる実装
 参考文献:@R-bayes
@@ -123,7 +134,7 @@ theta <- matrix(nrow = iterations, ncol = 2)
 
 # 事前分布のパラメータを設定
 m0 <- 0
-s0 <- 100
+s0 <- 1
 a0 <- 0
 b0 <- 0.01
 
@@ -153,7 +164,7 @@ for (t in 1:iterations) {
 }
 ```
 
-#### サンプリング系列
+#### サンプリング系列の可視化
 
 ```{r}
 op <- par(mfrow=c(2,1))
